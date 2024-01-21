@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import { useMemo } from "react";
 import { useState } from "react";
 
@@ -25,29 +25,35 @@ import { useState } from "react";
 
 function App() {
   const [n, setN] = useState(0);
-  const [count, setCount] = useState(0);
+  const [counter, setCounter] = useState(0);
+  // const [count, setCount] = useState(0);
 
-  useEffect(() => {
-    console.log("inside useEffect");
-    let count = 0;
-    for (let i = 0; i <= n; i++) {
-      count += i;
-    }
-    setCount(count);
-  }, [n]);
+  // useEffect(() => {
+  //   console.log("inside useEffect");
+  //   for (let i = 0; i <= n; i++) {
+  //     setCount((prev) => prev + i);
+  //   }
+  // }, [n]);
 
   let countValue = useMemo(() => {
     console.log("inside useMemo");
-    return count + 5;
-  }, [count]);
+    let count = 0;
+    for (let i = 0; i < n; i++) {
+      count += i;
+    }
+    return count;
+  }, [n]);
 
   return (
     <div>
       <input onChange={(e) => setN(e.target.value)} />
       <br />
-      <button>Click to Calculate</button>
+      Sum from 1 to n is: {countValue}
+      {/* Sum from 1 to n is: {count} */}
       <br />
-      Sum from 1 to n + 5 is: {countValue}
+      <button onClick={() => setCounter((c) => c + 1)}>
+        Counter : {counter}
+      </button>
     </div>
   );
 }
