@@ -1,58 +1,71 @@
-// import { useEffect } from "react";
-import { useMemo } from "react";
-import { useState } from "react";
-
-// function App() {
-//   const [n, setN] = useState(0);
-//   const [count, setCount] = useState(0);
-//   function countValue() {
-//     setCount(0);
-//     for (let i = 0; i < n; i++) {
-//       setCount((prev) => prev + i);
-//     }
-//   }
-
-//   return (
-//     <div>
-//       <input onChange={(e) => setN(e.target.value)} />
-//       <br />
-//       <button onClick={countValue}>Click to Calculate</button>
-//       <br />
-//       Sum from 1 to n is: {count};
-//     </div>
-//   );
-// }
+// import { useContext, useMemo, useState } from "react"
+// import { CountContext } from "./context";
+import {
+  RecoilRoot,
+  // useRecoilState,
+  useRecoilValue,
+  useSetRecoilState,
+} from "recoil";
+import { countAtom, evenSelector } from "./store/atoms/count";
 
 function App() {
-  const [n, setN] = useState(0);
-  const [counter, setCounter] = useState(0);
-  // const [count, setCount] = useState(0);
+  return (
+    <div>
+      <RecoilRoot>
+        <Count />
+      </RecoilRoot>
+    </div>
+  );
+}
 
-  // useEffect(() => {
-  //   console.log("inside useEffect");
-  //   for (let i = 0; i <= n; i++) {
-  //     setCount((prev) => prev + i);
-  //   }
-  // }, [n]);
+function Count() {
+  console.log("re-render :  <CountRenderer /> <Buttons />");
+  return (
+    <div>
+      <CountRenderer />
+      <Buttons />
+    </div>
+  );
+}
 
-  let countValue = useMemo(() => {
-    console.log("inside useMemo");
-    let count = 0;
-    for (let i = 0; i < n; i++) {
-      count += i;
-    }
-    return count;
-  }, [n]);
+function CountRenderer() {
+  const count = useRecoilValue(countAtom);
+  console.log("countRenderer re-rendered");
+  return (
+    <div>
+      <b>{count}</b>
+      <EvenCountRenderer />
+    </div>
+  );
+}
+
+function EvenCountRenderer() {
+  const isEven = useRecoilValue(evenSelector);
+  console.log("evenCountRenderer re-rendered");
+
+  return <div>{isEven ? "It is even" : null}</div>;
+}
+
+function Buttons() {
+  const setCount = useSetRecoilState(countAtom);
+  console.log("buttons re-rendererd");
 
   return (
     <div>
-      <input onChange={(e) => setN(e.target.value)} />
-      <br />
-      Sum from 1 to n is: {countValue}
-      {/* Sum from 1 to n is: {count} */}
-      <br />
-      <button onClick={() => setCounter((c) => c + 1)}>
-        Counter : {counter}
+      <button
+        onClick={() => {
+          setCount((count) => count + 1);
+        }}
+      >
+        Increase
+      </button>
+
+      <button
+        onClick={() => {
+          setCount((count) => count - 1);
+        }}
+      >
+        Decrease
       </button>
     </div>
   );
